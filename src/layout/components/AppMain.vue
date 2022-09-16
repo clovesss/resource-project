@@ -2,6 +2,7 @@
   <section class="app-main">
     <!-- transition 是 vue 一个内置组件， <transition>元素可以为单个元素和组件添加过度效果 -->
     <transition name="fade-transform" mode="out-in">
+      <!-- 二级路由容器 -->
       <router-view :key="key" />
     </transition>
   </section>
