@@ -37,7 +37,6 @@ module.exports = {
     ],
     // over
 
-
     "vue/singleline-html-element-content-newline": "off",
     "vue/multiline-html-element-content-newline": "off",
     "vue/name-property-casing": ["error", "PascalCase"],
@@ -189,7 +188,12 @@ module.exports = {
       'after': true
     }],
     'space-before-blocks': [2, 'always'],
-    'space-before-function-paren': [2, 'never'],
+
+    // 原版写法
+    // 'space-before-function-paren': [2, 'never'],
+    // （Unexpected space before function parenthess）函数括号前的意外空格处理
+    'space-before-function-paren': 0,
+    // 处理完毕
     'space-in-parens': [2, 'never'],
     'space-infix-ops': 2,
     'space-unary-ops': [2, {

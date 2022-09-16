@@ -36,7 +36,18 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    // before: require('./mock/mock-server.js'), //注释掉 mock的加载，因为mock-server会导致代理服务的异常
+    // 代理跨域的配置
+    proxy: {
+      '/api': {
+        target: 'http://ihrm-java.itheima.net/', // 要访问的接口域名
+        changeOrigin: true // 是否跨域
+        // 代理完毕后的真实地址是 http://ihrm-java.itheima.net/api,我们注释掉路径重写是因为我们的后台服务地址正好要求有这个api，所以不需要重写
+        // pathRewrite: {
+        //   '^/api': ''
+        // }
+      }
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
