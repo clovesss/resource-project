@@ -72,6 +72,7 @@
 
 <script>
 import { validMobile } from '@/utils/validate'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Login',
@@ -85,14 +86,6 @@ export default {
       }
       // validMobile(value) ? callback() : callback(new Error('手机号格式不正确'))
     }
-    // 密码验证
-    // const validatePassword = (rule, value, callback) => {
-    //   if (value.length < 6) {
-    //     callback(new Error('The password can not be less than 6 digits'))
-    //   } else {
-    //     callback()
-    //   }
-    // }
     return {
       loginForm: {
         mobile: '13800000002',
@@ -132,22 +125,39 @@ export default {
         this.$refs.password.focus()
       })
     },
+    ...mapActions(['user/login']), // 此时相当于在methods 有‘user/login’ 的方法，我们需要使用它
     handleLogin() {
-      this.$refs.loginForm.validate((valid) => {
+      // 在点击登录按钮之后需要对表单进行手动校验
+
+      this.$refs.loginForm.validate(async (valid) => {
         if (valid) {
-          this.loading = true
+          // 第一种方法
+          // 通过 this.$store.dispatch 方式触发，搭配的是.then 这种写法
+          /* this.loading = true // 开启loading加载中
+          // 如果验证通过调用登录接口时,通过触发 actions 里面的方法
           this.$store
             .dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || '/' })
-              this.loading = false
+              this.$router.push('/') // 登录成功之后跳转到注册
+              this.loading = false // 接口调用成功后关闭转圈
             })
-            .catch(() => {
-              this.loading = false
-            })
-        } else {
-          console.log('error submit!!')
-          return false
+            .catch((err) => {
+              this.loading = false // 关闭加载
+              console.log(err)
+            }) */
+          // 第二种方法  引入辅助函数mapActions
+          // async/ await 需要 try/catch 捕获
+          try {
+            this.loading = true
+            await this['user/login'](this.loginForm)
+            this.$router.push('/')
+          } catch (error) {
+            // 接口响应失败
+            console.log(error)
+          } finally {
+            // 不管成功失败都会执行
+            this.loading = false
+          }
         }
       })
     }
