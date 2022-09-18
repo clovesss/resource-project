@@ -4,7 +4,7 @@
       v-if="device === 'mobile' && sidebar.opened"
       class="drawer-bg"
       @click="handleClickOutside"
-    />
+    ></div>
     <!-- 左方侧边栏 -->
     <sidebar class="sidebar-container" />
     <!-- 右侧 -->
