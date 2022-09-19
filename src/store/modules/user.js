@@ -1,5 +1,5 @@
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { login, getUserInfo } from '@/api/user.js'
+import { login, getUserInfo, getUserDetailById } from '@/api/user.js'
 
 const state = {
   token: getToken(), // 初始化的时候从cookie中读取token
@@ -70,9 +70,23 @@ const actions = {
 
   async getUserInfo(context) {
     const result = await getUserInfo()
-    context.commit('setUserInfo', result) // 触发 mutations 里更新用户资料的方法
-    return result // 给我们后期做权限留下的伏笔
+    // 要传从上面拿到的id 所以要写在获取用户资料的下面
+    const baseInfo = await getUserDetailById(result.userId) // 主要是为了获取员工头像（staffPhoto）
+    // const baseResult = { ...result, ...baseInfo }
+    // 触发 mutations 里更新用户资料的方法
+    // context.commit('setUserInfo', result)
+    context.commit('setUserInfo', { ...result, ...baseInfo })
+    // return result // 给我们后期做权限留下的伏笔
+    // return baseResult
+    return { ...result, ...baseInfo }
+  },
+  logout(context) {
+    // 删除token
+    context.commit('remove')
+    // 删除用户信息
+    context.commit('removeUserInfo')
   }
+
 }
 export default {
   namespaced: true,

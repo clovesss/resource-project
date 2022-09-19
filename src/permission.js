@@ -9,7 +9,7 @@ import 'nprogress/nprogress.css' // progress bar style
 // 定义白名单，里面不受权限拦截
 const whiteList = ['/login', '404']
 // 前置守卫
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   NProgress.start()
   /* must call `next` */
   // next() 表示通过  next(false) 终止 next(地址) 跳转到某个地址
@@ -19,6 +19,13 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next('/') // 跳转到首页
     } else {
+      // 我们需要在此处获取用户资料
+      // 如果 vuex 中的 state 已经有用户资料了，我们就不用获取
+      if (!store.getters.userId) {
+        // 如果没有 ID 才表示当前用户资料没有获取过，我们需要获取
+        await store.dispatch('user/getUserInfo')
+        // 如果说以后我们要从用户资料拿到数据，此处必须改成同步(要当我们的用户资料获取完)
+      }
       next() // 直接放行
     }
   } else {

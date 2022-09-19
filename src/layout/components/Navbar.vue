@@ -15,8 +15,13 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img src="@/assets/common/bigUserHeader.png" class="user-avatar" />
-          <span class="name">管理员</span>
+          <!-- <img :src="staffPhoto" class="user-avatar" /> -->
+          <img
+            v-imageError="defaultImg"
+            :src="staffPhoto"
+            class="user-avatar"
+          />
+          <span class="name">{{ name }}</span>
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -46,8 +51,14 @@ export default {
   components: {
     Hamburger
   },
+  data() {
+    return {
+      // 这里是头像的默认图片，图片加载不出来就显示
+      defaultImg: require('@/assets/common/head.jpg')
+    }
+  },
   computed: {
-    ...mapGetters(['sidebar', 'avatar'])
+    ...mapGetters(['sidebar', 'avatar', 'name', 'staffPhoto'])
   },
   methods: {
     toggleSideBar() {

@@ -18,6 +18,15 @@ export function getUserInfo() {
     method: 'post'
   })
 }
+/**
+ * @params  用户id (调用时传入result.userId)
+ * @description 通过Id获取员工基本信息(这里是为了拿到头像图片地址)
+ */
+export function getUserDetailById(id) {
+  return request({
+    url: `/sys/user/${id}`
+  })
+}
 
 export function logout() {
 
