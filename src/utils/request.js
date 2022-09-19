@@ -4,7 +4,7 @@ import router from '@/router'
 // 引入element-ui的消息提示组件
 import { Message } from 'element-ui'
 import { getTimeStamp } from '@/utils/auth'
-const TimeOut = 2 // 设置超时时间 /s
+const TimeOut = 3600 // 设置超时时间 /s
 // 创建 axios 实例
 const service = axios.create({
   // 配置请求的基地址，在不同开发环境就会读取相应的开发环境里面的变量，我们修改了开发环境这个变量的值是为了在发送请求时触发代理机制。
