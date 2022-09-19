@@ -10,6 +10,10 @@ export const imagError = {
       // dom可以注册error事件
       dom.src = options.value // 这里不能写死
     }
+  },
+  // 在赋值之后重新处理
+  componentUpdated(dom, options) {
+    dom.src = dom.src || options.value
   }
 }
 

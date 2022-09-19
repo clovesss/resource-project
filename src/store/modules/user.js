@@ -80,9 +80,14 @@ const actions = {
     // return baseResult
     return { ...result, ...baseInfo }
   },
+  /**
+   *
+   * @param {*} context
+   * @description 登出功能
+   */
   logout(context) {
     // 删除token
-    context.commit('remove')
+    context.commit('remove') // 移除token，移除vuex 中 state的 token
     // 删除用户信息
     context.commit('removeUserInfo')
   }
