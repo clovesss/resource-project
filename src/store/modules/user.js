@@ -1,4 +1,4 @@
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, setTimeStamp } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailById } from '@/api/user.js'
 
 const state = {
@@ -55,6 +55,8 @@ const actions = {
     // context.commit('setToken', result.data.data)
     // 在响应拦截器已经对数据做了解构，而且对 success 提前进行了判断，所以这里不需要再判断了
     context.commit('setToken', result)
+    // 拿到token 说明登录成功
+    setTimeStamp() // 设置当前的时间戳
     // }
   }, // 第二种写法
   // login(context, data) {

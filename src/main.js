@@ -37,6 +37,7 @@ Vue.use(ElementUI, { locale })
 import * as directives from '@/directives'
 // 注册自定义指令
 // 遍历所有的导出的指令对象 完成自定义全局注册
+// Object.keys() 方法会返回一个由一个给定对象的自身可枚举属性组成的数组，数组中属性名的排列顺序和正常循环遍历该对象时返回的顺序一致。
 Object.keys(directives).forEach(key => {
   // 注册自定义指令
   Vue.directive(key, directives[key])
