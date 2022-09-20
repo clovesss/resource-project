@@ -60,7 +60,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard' }
     }]
   },
   //
@@ -82,7 +82,7 @@ export const asyncRoutes = [
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }), // 管理滚动行为 如果出现滚动 切换就让 让页面回到顶部
-  routes: [...constantRoutes, ...asyncRoutes] // 临时合并静态和动态路由
+  routes: [...constantRoutes, ...asyncRoutes] // 临时合并静态路由和动态路由
 })
 
 const router = createRouter()
