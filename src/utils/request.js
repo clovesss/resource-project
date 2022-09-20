@@ -19,7 +19,7 @@ service.interceptors.request.use(config => {
   if (store.getters.token) {
     // 只有token存在的时候，才有必要检查时间戳是否超时
     if (IsCheckTimeOut()) {
-      // token 超时了，我们需要双清（缓存跟vuex里user 中的 Token ）
+      // token 超时了，我们需要双清（缓存跟 vuex 里user 中的 Token ）
       store.dispatch('user/logout') // 登出+双清操作
       router.push('/login')
       return Promise.reject(new Error('token超时了'))
@@ -51,19 +51,18 @@ service.interceptors.response.use(
       // 此时 token 超时了，我们需要登出+双清
       store.dispatch('user/logout')
       router.push('/login')
-      return Promise.reject(error)
     } else {
-      // 接口响应失败
       Message.error(error.message) // 错误消息提示
-      // return Promise.reject(error) // 这行代码最终会通过catch进行捕获
     }
+    // 接口响应失败
+    return Promise.reject(error) // 这行代码最终会通过catch进行捕获
   }
 )
 // token 是否超时
 // 超时逻辑  (当前时间  - 缓存中的时间) 是否大于 时间差
 function IsCheckTimeOut() {
-  var currentTime = Date.now() // 当前时间戳
-  var timeStamp = getTimeStamp() // 缓存时间戳
+  const currentTime = Date.now() // 当前时间戳
+  const timeStamp = getTimeStamp() // 缓存时间戳
   return (currentTime - timeStamp) / 1000 > TimeOut
 }
 
