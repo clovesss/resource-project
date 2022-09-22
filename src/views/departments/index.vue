@@ -20,13 +20,15 @@
 
 <script>
 import treeTools from './components/tree-tools.vue'
+import { getDepartments } from '@/api/departments.js'
+import { tranListToTreeData } from '@/utils'
 export default {
   components: {
     treeTools
   },
   data() {
     return {
-      company: { name: 'xxxxxxxx科技股份有限公司', manager: '负责人' },
+      company: { name: '', manager: '' },
       departs: [
         {
           name: '总裁办',
@@ -40,6 +42,18 @@ export default {
         label: 'name' // 表示 从这个属性显示内容
         // children: 'children' // 默认就是children
       }
+    }
+  },
+  created() {
+    this.getDepartments()
+  },
+  methods: {
+    async getDepartments() {
+      const result = await getDepartments()
+      this.company = { name: result.companyName, manager: '负责人' }
+      // this.departs = result.depts // 这里需要把数组转换为树形结构
+      this.departs = tranListToTreeData(result.depts, '')
+      // console.log(result)
     }
   }
 }
