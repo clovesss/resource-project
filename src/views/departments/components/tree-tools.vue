@@ -15,13 +15,17 @@
         <el-col>{{ treeNode.manager }}</el-col>
         <el-col>
           <!-- 下拉菜单 element -->
-          <el-dropdown>
+          <el-dropdown @command="operateDepts">
             <span> 操作<i class="el-icon-arrow-down"></i> </span>
             <!-- 下拉菜单 -->
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>添加子部门</el-dropdown-item>
-              <el-dropdown-item v-if="!isRoot">编辑部门</el-dropdown-item>
-              <el-dropdown-item v-if="!isRoot">删除部门</el-dropdown-item>
+              <el-dropdown-item command="add">添加子部门</el-dropdown-item>
+              <el-dropdown-item v-if="!isRoot" command="edit">
+                编辑部门
+              </el-dropdown-item>
+              <el-dropdown-item v-if="!isRoot" command="del">
+                删除部门
+              </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-col>
@@ -31,6 +35,7 @@
 </template>
 
 <script>
+import { delDepartments } from '@/api/departments.js'
 // 该组件需要对外开放属性 外部需要提供一个对象 对象里需要有name  manager
 export default {
   // props可以用数组来接收数据 也可以用对象来接收
@@ -44,6 +49,28 @@ export default {
     isRoot: {
       type: Boolean,
       default: false
+    }
+  },
+  // 点击 编辑 删除 新增时触发
+  methods: {
+    operateDepts(type) {
+      if (type === 'add') {
+        // 添加子部门
+      } else if (type === 'edit') {
+        //  编辑部门
+      } else {
+        //  删除部门
+        this.$confirm('确定要删除该部吗')
+          .then(() => {
+            // 如果点击了确定就会进入then
+            return delDepartments(this.treeNode.id) // 返回promise对象
+          })
+          .then(() => {
+            //  如果删除成功了  就会进入这里
+            this.$emit('delDepts') // 触发父组件里的自定义事件
+            this.$message.success('删除部门成功')
+          })
+      }
     }
   }
 }
