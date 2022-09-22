@@ -60,15 +60,22 @@ export default {
         //  编辑部门
       } else {
         //  删除部门
-        this.$confirm('确定要删除该部吗')
+        this.$confirm('确定要删除该部吗', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
           .then(() => {
             // 如果点击了确定就会进入then
-            return delDepartments(this.treeNode.id) // 返回promise对象
+            return delDepartments(this.treeNode.id) // 这里我们是请求的接口，返回的是promise对象，我们可以继续.then 链式处理
           })
           .then(() => {
-            //  如果删除成功了  就会进入这里
+            //  删除成功之后，父组件显示的数据需要更新，使用子、父通信的技术
             this.$emit('delDepts') // 触发父组件里的自定义事件
-            this.$message.success('删除部门成功')
+            this.$message({
+              type: 'success',
+              message: '删除成功！'
+            })
           })
       }
     }
