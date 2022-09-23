@@ -17,12 +17,17 @@
             :tree-node="data"
             @delDepts="getDepartments"
             @addDepts="addDepts"
+            @editDepts="editDepts"
           />
         </el-tree>
       </el-card>
     </div>
     <!-- 弹框组件 -->
-    <addDepts :show-dialog="showDialog" :current-node="node" />
+    <addDepts
+      :show-dialog.sync="showDialog"
+      :current-node="node"
+      @addDepts="getDepartments"
+    />
   </div>
 </template>
 
@@ -71,6 +76,10 @@ export default {
       this.showDialog = true // 显示弹层
       // 因为node是当前的点击的部门， 此时这个部门应该记录下来,
       this.node = node // 将当前的节点信息存储起来
+    },
+    editDepts(node) {
+      this.showDialog = true
+      this.node = node
     }
   }
 }

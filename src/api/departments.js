@@ -12,7 +12,6 @@ export function getDepartments() {
  *
  * @description 删除组织架构的数据
 */
-//
 // 接口是根据restful的规则设计的，删除业务 delete  新增业务 post  修改 put 获取 get
 export function delDepartments(id) {
   return request({
@@ -26,7 +25,7 @@ export function delDepartments(id) {
 export function addDepartments(data) {
   return request({
     url: '/company/department',
-    methods: 'post',
+    method: 'post',
     data
   })
 }

@@ -60,6 +60,7 @@ export default {
         this.$emit('addDepts', this.treeNode) // 为何传出treeNode 因为是添加子部门 需要当前部门的数据
       } else if (command === 'edit') {
         //  编辑部门
+        this.$emit('editDepts', this.treeNode)
       } else {
         //  删除部门
         this.$confirm('确定要删除该部吗', '提示', {
