@@ -53,12 +53,12 @@ export default {
   },
   // 点击 编辑 删除 新增时触发
   methods: {
-    operateDepts(type) {
-      if (type === 'add') {
+    operateDepts(command) {
+      if (command === 'add') {
         // 添加子部门
-        // 告诉父组件 显示弹层
+        // 当点击添加子部门时，需要子组件向父组件传递事件，顺便我们把当前节点的信息传递过去，就是props中的treeNode
         this.$emit('addDepts', this.treeNode) // 为何传出treeNode 因为是添加子部门 需要当前部门的数据
-      } else if (type === 'edit') {
+      } else if (command === 'edit') {
         //  编辑部门
       } else {
         //  删除部门

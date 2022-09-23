@@ -22,7 +22,7 @@
       </el-card>
     </div>
     <!-- 弹框组件 -->
-    <addDepts :show-dialog="showDialog" />
+    <addDepts :show-dialog="showDialog" :current-node="node" />
   </div>
 </template>
 
@@ -39,6 +39,7 @@ export default {
   data() {
     return {
       showDialog: false, // 控制弹层的显示隐藏
+      node: null,
       company: { name: '', manager: '' },
       departs: [
         {
@@ -61,7 +62,7 @@ export default {
   methods: {
     async getDepartments() {
       const result = await getDepartments()
-      this.company = { name: result.companyName, manager: '负责人' }
+      this.company = { name: result.companyName, manager: '负责人', id: '' }
       // this.departs = result.depts // 这里需要把数组转换为树形结构
       this.departs = tranListToTreeData(result.depts, '')
       // console.log(result)
@@ -69,7 +70,7 @@ export default {
     addDepts(node) {
       this.showDialog = true // 显示弹层
       // 因为node是当前的点击的部门， 此时这个部门应该记录下来,
-      this.node = node
+      this.node = node // 将当前的节点信息存储起来
     }
   }
 }
