@@ -1,7 +1,7 @@
 <template>
   <!-- 新增部门的弹层 -->
   <!-- close Dialog 关闭时的回调 -->
-  <el-dialog title="新增部门" :visible="showDialog" @close="btnCancel">
+  <el-dialog :title="showTitle" :visible="showDialog" @close="btnCancel">
     <!-- 表单组件  el-form   label-width 设置label的宽度   -->
     <!-- 匿名插槽 -->
     <el-form
@@ -62,7 +62,11 @@
 </template>
 
 <script>
-import { getDepartments, addDepartments } from '@/api/departments.js'
+import {
+  getDepartments,
+  addDepartments,
+  getDepartDetail
+} from '@/api/departments.js'
 import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
@@ -101,7 +105,6 @@ export default {
         ? callback(new Error(`组织架构中已经有部门使用${value}编码`))
         : callback()
     }
-
     return {
       peoples: [], // 存放员工简单信息的数据
       rulesForm: {
@@ -146,6 +149,12 @@ export default {
       }
     }
   },
+  computed: {
+    // 通过计算属性实现弹框标题的动态显示，我们发现 rulesForm 中有 id 的话就是编辑，没有 id 就是新增
+    showTitle() {
+      return this.rulesForm.id ? '编辑部门' : '添加子部门'
+    }
+  },
   methods: {
     // 获取员工简单信息
     async getEmployeeSimple() {
@@ -171,10 +180,26 @@ export default {
       })
     },
     btnCancel() {
-      // resetFields: 对整个表单进行重置，将所有字段值重置为初始值并移除校验结果
-      this.$refs.deptForm.resetFields()
+      // 初始化（重置）数据，
+      // 因为 resetFields 只能重置表单上的数据，如果不是表单上绑定的数据，它是不能重置的，我们需要手动重置表单对象中的数据，也可以说我们对 rulesForm 进行了初始化
+
+      this.rulesForm = {
+        name: '',
+        code: '',
+        manager: '',
+        introduce: ''
+      }
       //  点击取消按钮时关闭弹层
       this.$emit('update:showDialog', false)
+      // resetFields: 对整个表单进行重置，将表单上的所有字段值重置为初始值并移除校验结果
+      this.$refs.deptForm.resetFields()
+    },
+    // 定义获取部门数据详情的方法
+    async getDepartDetail(id) {
+      // 接口返回的数据需要回填到 rulesForm 这个对象
+      this.rulesForm = await getDepartDetail(id)
+      // 注意：props传来的当前节点对象的 id 在这里我们不能使用
+      // 由于 props 传递过来的数据是异步的，有可能在我们调用接口的时候，数据还没有传递过来，导致此处接口调用失败
     }
   }
 }

@@ -24,6 +24,7 @@
     </div>
     <!-- 弹框组件 -->
     <addDepts
+      ref="addDept"
       :show-dialog.sync="showDialog"
       :current-node="node"
       @addDepts="getDepartments"
@@ -80,6 +81,8 @@ export default {
     editDepts(node) {
       this.showDialog = true
       this.node = node
+      // 在这里通过 ref 属性 我们使用add-dept组件中的 getDepartDetail(id) 方法
+      this.$refs.addDept.getDepartDetail(node.id)
     }
   }
 }

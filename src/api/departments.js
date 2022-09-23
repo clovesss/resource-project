@@ -29,3 +29,12 @@ export function addDepartments(data) {
     data
   })
 }
+/**
+ * @param id 为当前点击的对象id
+ * @description 获取部门详情，在我们点击编辑的时候数据回填在表单中
+ */
+export function getDepartDetail(id) {
+  return request({
+    url: `/company/department/${id}`
+  })
+}
