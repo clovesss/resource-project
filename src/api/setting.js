@@ -51,3 +51,16 @@ export function getRoleDetail(id) {
     url: `/sys/role/${id}`
   })
 }
+/**
+ *
+ * @param {*} data
+ * @description 新增角色
+ * @returns
+ */
+export function addRole(data) {
+  return request({
+    url: '/sys/role',
+    method: 'post',
+    data
+  })
+}

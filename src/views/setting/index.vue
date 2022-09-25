@@ -7,7 +7,12 @@
           <el-tab-pane label="角色管理">
             <!-- 新增角色按钮 -->
             <el-row style="height: 60px">
-              <el-button icon="el-icon-plus" size="small" type="primary">
+              <el-button
+                icon="el-icon-plus"
+                size="small"
+                type="primary"
+                @click="showDialog = true"
+              >
                 新增角色
               </el-button>
             </el-row>
@@ -151,7 +156,8 @@ import {
   getCompanyInfo,
   deleteRole,
   getRoleDetail,
-  updateRole
+  updateRole,
+  addRole
 } from '@/api/setting'
 import { mapGetters } from 'vuex'
 export default {
@@ -221,10 +227,7 @@ export default {
       this.roleForm = await getRoleDetail(id)
       this.showDialog = true
     },
-    // 关闭弹框
-    btnCancel() {
-      this.showDialog = false
-    },
+
     // 在编辑的对话框点击确认
     async btnOK() {
       try {
@@ -236,16 +239,26 @@ export default {
           await updateRole(this.roleForm)
         } else {
           // 新增
+          await addRole(this.roleForm)
         }
-
         // 拉取最新数据
         this.getRoleList()
         this.$message.success('编辑成功')
         // 关闭对话框
-        this.showDialog = false
+        this.showDialog = false // 这里的关闭对话框会触发 el-dialog 的 close 事件，而我们的 close 绑定的是 btnCancel 事件，此处不许在进行处理
       } catch (error) {
         console.log(error)
       }
+    },
+    // 关闭弹框
+    btnCancel() {
+      this.roleForm = {
+        name: '',
+        description: ''
+      }
+      // 移除校验信息
+      this.$refs.roleForm.resetFields()
+      this.showDialog = false
     }
   }
 }
