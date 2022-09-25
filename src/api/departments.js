@@ -38,3 +38,13 @@ export function getDepartDetail(id) {
     url: `/company/department/${id}`
   })
 }
+/**
+ * @description 定义编辑部门请求接口
+ */
+export function updateDepartments(data) {
+  return request({
+    url: `/company/department/${data.id}`,
+    method: 'put',
+    data
+  })
+}

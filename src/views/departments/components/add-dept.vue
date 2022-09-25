@@ -65,7 +65,9 @@
 import {
   getDepartments,
   addDepartments,
-  getDepartDetail
+  getDepartDetail,
+  updateDepartments
+  // updateDepartments
 } from '@/api/departments.js'
 import { getEmployeeSimple } from '@/api/employees'
 export default {
@@ -87,11 +89,24 @@ export default {
       // 失去焦点的时候需要重新获取一下数据
       const { depts } = await getDepartments()
       // console.log(depts) // 所有的部门数据
-      const isRepeat = depts
-        // 找到当前节点(点击添加时的节点)的同级部门
-        .filter((item) => item.pid === this.currentNode.id)
-        // 判断同级里名字是否和 value 重复
-        .some((item) => item.name === value)
+      let isRepeat = false
+      if (this.rulesForm.id) {
+        // 编辑场景下的校验
+        // 需求：同级部门下的部门名字(需要排除本身)不能和编辑后的名字相同
+        isRepeat = depts
+          .filter(
+            (item) =>
+              item.id !== this.rulesForm.id && item.pid === this.currentNode.pid
+          )
+          .some((item) => item.name === value)
+      } else {
+        // 新增场景下的校验
+        isRepeat = depts
+          // 找到当前节点(点击添加时的节点)的同级部门
+          .filter((item) => item.pid === this.currentNode.id)
+          // 判断同级里名字是否和 value 重复
+          .some((item) => item.name === value)
+      }
       isRepeat
         ? callback(new Error(`同级部门下已经有${value}的部门了`))
         : callback()
@@ -99,8 +114,17 @@ export default {
     // 部门编码在整个模块中都不允许重复
     const checkCodeRepeat = async (rule, value, callback) => {
       const { depts } = await getDepartments()
-      // 这里是和所有的部门编码进行对比，不需要过滤
-      const isRepeat = depts.some((item) => item.code === value && value)
+      let isRepeat = false
+      if (this.rulesForm.id) {
+        // 编辑场景下的校验
+        isRepeat = depts
+          .filter((item) => item.id !== this.rulesForm.id)
+          .some((item) => item.code === value)
+      } else {
+        // 这里是和所有的部门编码进行对比，不需要过滤
+        isRepeat = depts.some((item) => item.code === value && value)
+      }
+
       isRepeat // true or false
         ? callback(new Error(`组织架构中已经有部门使用${value}编码`))
         : callback()
@@ -166,10 +190,17 @@ export default {
       this.$refs.deptForm.validate(async (isOk) => {
         if (isOk) {
           // 表单校验通过
-          await addDepartments({ ...this.rulesForm, pid: this.currentNode.id })
-          // console.log(this.rulesForm)
-          // console.log(this.currentNode.id)
-          console.log({ ...this.rulesForm, pid: this.currentNode.id })
+          // 进行场景区分
+          if (this.rulesForm.id) {
+            // 有id,是编辑场景
+            await updateDepartments(this.rulesForm)
+          } else {
+            // 新增部门场景
+            await addDepartments({
+              ...this.rulesForm,
+              pid: this.currentNode.id
+            })
+          }
           // 新增完成后，需要重新获取一下数据
           this.$emit('addDepts') // 子组件触发父组件方法，重新更新数据的方法
           // 第一种方式：子传父技术关闭弹层
