@@ -29,10 +29,25 @@
                 width="240"
               />
               <el-table-column align="center" prop="description" label="描述" />
+              <!-- 获取点击当前行的数据，需要通过作用域插槽的方式 -->
               <el-table-column align="center" label="操作">
-                <el-button size="small" type="success">分配权限</el-button>
-                <el-button size="small" type="primary">编辑</el-button>
-                <el-button size="small" type="danger">删除</el-button>
+                <template slot-scope="scope">
+                  <el-button size="small" type="success">分配权限</el-button>
+                  <el-button
+                    size="small"
+                    type="primary"
+                    @click="editRole(scope.row.id)"
+                  >
+                    编辑
+                  </el-button>
+                  <el-button
+                    size="small"
+                    type="danger"
+                    @click="deleteRole(scope.row.id)"
+                  >
+                    删除
+                  </el-button>
+                </template>
               </el-table-column>
             </el-table>
             <!-- 分页组件 -->
@@ -104,11 +119,40 @@
         </el-tabs>
       </el-card>
     </div>
+    <!-- 点击编辑时出现的对话框 -->
+    <el-dialog title="编辑弹层" :visible="showDialog" @close="btnCancel">
+      <el-form
+        ref="roleForm"
+        :model="roleForm"
+        :rules="rules"
+        label-width="120px"
+      >
+        <el-form-item label="角色名称" prop="name">
+          <el-input v-model="roleForm.name" />
+        </el-form-item>
+        <el-form-item label="角色描述">
+          <el-input v-model="roleForm.description" />
+        </el-form-item>
+      </el-form>
+      <!-- 底部 -->
+      <el-row slot="footer" type="flex" justify="center">
+        <el-col :span="6">
+          <el-button size="small" @click="btnCancel">取消</el-button>
+          <el-button size="small" type="primary" @click="btnOK">确定</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo } from '@/api/setting'
+import {
+  getRoleList,
+  getCompanyInfo,
+  deleteRole,
+  getRoleDetail,
+  updateRole
+} from '@/api/setting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -120,7 +164,15 @@ export default {
         pagesize: 5,
         total: 0 // 记录数据总数
       },
-      companyData: {} // 存放获取的公司信息
+      companyData: {}, // 存放获取的公司信息,
+      showDialog: false, // 控制弹框的展示与隐藏
+      roleForm: {
+        name: '',
+        description: ''
+      },
+      rules: {
+        name: [{ required: true, message: '角色名字不能为空', trigger: 'blur' }]
+      }
     }
   },
   computed: {
@@ -149,6 +201,51 @@ export default {
     // 调用获取公司信息的接口
     async getCompanyInfo() {
       this.companyData = await getCompanyInfo(this.companyId)
+    },
+    // 注册删除角色的方法
+    async deleteRole(id) {
+      try {
+        // 提醒用户是否确认删除
+        await this.$confirm('你确定要删除该角色吗？')
+        // 调用删除接口
+        await deleteRole(id)
+        // 重新获取角色列表
+        this.getRoleList()
+        this.$message.success('删除角色成功！')
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    // 点击编辑按钮，对话框展示
+    async editRole(id) {
+      this.roleForm = await getRoleDetail(id)
+      this.showDialog = true
+    },
+    // 关闭弹框
+    btnCancel() {
+      this.showDialog = false
+    },
+    // 在编辑的对话框点击确认
+    async btnOK() {
+      try {
+        // validate	是对整个表单进行校验的方法，参数为一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：是否校验成功和未通过校验的字段。若不传入回调函数，则会返回一个 promise
+        await this.$refs.roleForm.validate()
+        // 手动校验成功才可以进入下面代码
+        // 如果 roleForm 有id 属性就是我们编辑功能获取到的数据对象
+        if (this.roleForm.id) {
+          await updateRole(this.roleForm)
+        } else {
+          // 新增
+        }
+
+        // 拉取最新数据
+        this.getRoleList()
+        this.$message.success('编辑成功')
+        // 关闭对话框
+        this.showDialog = false
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
