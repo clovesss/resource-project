@@ -12,11 +12,13 @@
               </el-button>
             </el-row>
             <!-- 表格 border:边框，label:标题 -->
-            <!-- 当el-table元素中注入data对象数组后，在el-table-column中用prop属性来对应对象中的键名即可填入数据 -->
+            <!-- 当el-table元素中注入data对象数组后，在el-table-column中用prop属性来对应对象中的键名即可填入数据-->
             <el-table border="" :data="list">
+              <!-- 如果设置了 type=index，可以通过传递 index 属性来自定义索引 -->
               <el-table-column
                 align="center"
                 type="index"
+                :index="indexF"
                 label="序号"
                 width="120"
               />
@@ -68,16 +70,29 @@
             />
             <el-form label-width="120px" style="margin-top: 50px">
               <el-form-item label="公司名称">
-                <el-input disabled style="width: 400px" />
+                <el-input
+                  v-model="companyData.name"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
               <el-form-item label="公司地址">
-                <el-input disabled style="width: 400px" />
+                <el-input
+                  v-model="companyData.companyAddress"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
               <el-form-item label="邮箱">
-                <el-input disabled style="width: 400px" />
+                <el-input
+                  v-model="companyData.mailbox"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
               <el-form-item label="备注">
                 <el-input
+                  v-model="companyData.remarks"
                   type="textarea"
                   :rows="3"
                   disabled
@@ -93,7 +108,8 @@
 </template>
 
 <script>
-import { getRoleList } from '@/api/setting'
+import { getRoleList, getCompanyInfo } from '@/api/setting'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -101,15 +117,24 @@ export default {
       page: {
         // 放置页码及相关数据
         page: 1,
-        pagesize: 10,
+        pagesize: 5,
         total: 0 // 记录数据总数
-      }
+      },
+      companyData: {} // 存放获取的公司信息
     }
+  },
+  computed: {
+    ...mapGetters(['companyId']) // 从vuex获取companyId
   },
   created() {
     this.getRoleList()
+    this.getCompanyInfo()
   },
   methods: {
+    // 自定义索引计算方法
+    indexF(index) {
+      return (this.page.page - 1) * this.page.pagesize + index + 1
+    },
     async getRoleList() {
       const { total, rows } = await getRoleList(this.page) // 发起带参的请求 total:number,rows:Object
       this.list = rows
@@ -120,6 +145,10 @@ export default {
       // console.log(currentPage)
       this.page.page = currentPage
       this.getRoleList()
+    },
+    // 调用获取公司信息的接口
+    async getCompanyInfo() {
+      this.companyData = await getCompanyInfo(this.companyId)
     }
   }
 }
