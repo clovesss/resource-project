@@ -12,7 +12,12 @@
       <!-- 放置表格和分页 -->
       <el-card>
         <el-table border :data="list">
-          <el-table-column label="序号" sortable="" type="index" />
+          <el-table-column
+            label="序号"
+            sortable=""
+            type="index"
+            :index="indexF"
+          />
           <el-table-column label="姓名" sortable="" prop="username" />
           <el-table-column label="工号" sortable="" prop="workNumber" />
           <el-table-column
@@ -72,8 +77,13 @@ export default {
     this.getEmployeeList()
   },
   methods: {
+    // 自定义索引计算方法
+    indexF(index) {
+      return (this.page.page - 1) * this.page.size + index + 1
+    },
     // 页面切换
     changePage(currentPage) {
+      console.log(111)
       this.page.page = currentPage
       this.getEmployeeList()
     },
