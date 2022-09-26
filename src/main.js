@@ -43,6 +43,10 @@ Object.keys(directives).forEach(key => {
   Vue.directive(key, directives[key])
 })
 
+// 注册全局的组件
+import Component from '@/components'
+Vue.use(Component)
+
 Vue.config.productionTip = false
 
 new Vue({
