@@ -21,3 +21,15 @@ export function getEmployeeList(params) {
     params
   })
 }
+
+/**
+ *
+ * @param {Number} id
+ * @description 删除员工的接口
+ */
+export function delEmployee(id) {
+  return request({
+    url: `/sys/user/${id}`,
+    method: 'delete'
+  })
+}
