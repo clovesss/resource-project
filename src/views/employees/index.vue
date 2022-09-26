@@ -6,7 +6,9 @@
         <template slot="after">
           <el-button size="small" type="warning">导入</el-button>
           <el-button size="small" type="danger">导出</el-button>
-          <el-button size="small" type="primary">新增员工</el-button>
+          <el-button size="small" type="primary" @click="showDialog = true">
+            新增员工
+          </el-button>
         </template>
       </page-tools>
       <!-- 放置表格和分页 -->
@@ -82,14 +84,22 @@
           />
         </el-row>
       </el-card>
+      <!-- 弹出层 -->
+      <add-employee :show-dialog.sync="showDialog" />
     </div>
   </div>
 </template>
 
 <script>
 import { getEmployeeList, delEmployee } from '@/api/employees'
+// 引入员工的枚举对象
 import EmployeeEnum from '@/api/constant/employees'
+// 引入弹出层组件
+import AddEmployee from '@/views/employees/components/add-employee.vue'
 export default {
+  components: {
+    AddEmployee
+  },
   data() {
     return {
       loading: false,
@@ -98,7 +108,8 @@ export default {
         page: 1, // 当前页码
         size: 5,
         total: 0 // 总数
-      }
+      },
+      showDialog: false // 控制弹出层的显示与隐藏
     }
   },
   created() {
