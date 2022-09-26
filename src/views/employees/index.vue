@@ -51,7 +51,7 @@
             :current-page="page.page"
             :page-size="page.size"
             :total="page.total"
-            @current-page="changePage"
+            @current-change="changePage"
           />
         </el-row>
       </el-card>
