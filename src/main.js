@@ -47,6 +47,14 @@ Object.keys(directives).forEach(key => {
 import Component from '@/components'
 Vue.use(Component)
 
+// 引入filters
+import * as filters from '@/filters' // 引入工具类
+// 注册全局的过滤器
+Object.keys(filters).forEach(key => {
+  // 注册过滤器
+  Vue.filter(key, filters[key])
+})
+
 Vue.config.productionTip = false
 
 new Vue({
