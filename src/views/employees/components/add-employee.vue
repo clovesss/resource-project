@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增员工" :visible="showDialog">
+  <el-dialog title="新增员工" :visible="showDialog" @close="btnCancel">
     <!-- 表单 -->
     <el-form
       ref="addEmployee"

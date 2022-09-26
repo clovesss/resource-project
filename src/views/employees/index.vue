@@ -2,7 +2,7 @@
   <div class="dashboard-container">
     <div class="app-container">
       <page-tools :show-before="true">
-        <span slot="before">共166条记录</span>
+        <span slot="before">共 {{ page.total }} 条记录</span>
         <template slot="after">
           <el-button size="small" type="warning">导入</el-button>
           <el-button size="small" type="danger">导出</el-button>
@@ -22,6 +22,13 @@
           />
           <el-table-column label="姓名" sortable="" prop="username" />
           <el-table-column label="工号" sortable="" prop="workNumber" />
+          <!-- 方式1 使用局部过滤器实现 -->
+          <!-- <el-table-column align="center" label="聘用形式" sortable="">
+            <template slot-scope="scope">
+              <span>{{ scope.row.formOfEmployment | changeType }}</span>
+            </template>
+          </el-table-column> -->
+          <!-- 方式2 使用表格内置 formatter 属性实现 -->
           <el-table-column
             align="center"
             label="聘用形式"
@@ -100,6 +107,17 @@ export default {
   components: {
     AddEmployee
   },
+  // filters: {
+  //   changeType(value) {
+  //     if (value === 1) {
+  //       return '正式'
+  //     } else if (value === 2) {
+  //       return '非正式'
+  //     } else {
+  //       return '未知'
+  //     }
+  //   }
+  // },
   data() {
     return {
       loading: false,
@@ -134,8 +152,12 @@ export default {
       this.loading = false
     },
     // 格式化聘用形式
+    // row 表示单元格所在行的所有字段信息
+    // column 表示列的信息
+    // cellValue 表示单元格的值
     formatEmployment(row, column, cellValue, index) {
-      // 要去找 1 所对应的值
+      // console.log(cellValue); // 1
+      // find()方法返回数组中满足提供的测试函数的第一个元素的值。否则返回 undefined 
       const obj = EmployeeEnum.hireType.find((item) => item.id === cellValue)
       return obj ? obj.value : '未知'
     },
