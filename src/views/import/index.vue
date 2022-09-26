@@ -1,5 +1,5 @@
 <template>
-  <!-- 公共导入组件 -->
+  <!-- 公共导入我们的组件 -->
   <upload-excel :on-success="success" />
 </template>
 
