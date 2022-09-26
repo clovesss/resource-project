@@ -52,7 +52,7 @@ import * as filters from '@/filters' // 引入工具类
 // 注册全局的过滤器
 Object.keys(filters).forEach(key => {
   // 注册过滤器
-  Vue.filter(key, filters[key])
+  Vue.filter(key, filters[key]) // (过滤器名称,过滤器函数)
 })
 
 Vue.config.productionTip = false

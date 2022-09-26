@@ -4,7 +4,13 @@
       <page-tools :show-before="true">
         <span slot="before">共 {{ page.total }} 条记录</span>
         <template slot="after">
-          <el-button size="small" type="warning">导入</el-button>
+          <el-button
+            size="small"
+            type="warning"
+            @click="$router.push('/import?type=user')"
+          >
+            导入
+          </el-button>
           <el-button size="small" type="danger">导出</el-button>
           <el-button size="small" type="primary" @click="showDialog = true">
             新增员工
@@ -43,8 +49,8 @@
             sortable=""
             prop="timeOfEntry"
           >
-            <template slot-scope="obj">
-              {{ obj.row.timeOfEntry | formatDate }}
+            <template slot-scope="{ row }">
+              {{ row.timeOfEntry | formatDate }}
             </template>
           </el-table-column>
           <el-table-column
@@ -59,7 +65,9 @@
             </template>
           </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
-            <template slot-scope="scope">
+            <!-- 这里是作用域插槽的两种写法 -->
+            <!-- <template slot-scope="{ row }"> -->
+            <template v-slot="{ row }">
               <el-button type="text" size="small">查看</el-button>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
@@ -68,7 +76,7 @@
               <el-button
                 type="text"
                 size="small"
-                @click="deleteEmployee(scope.row.id)"
+                @click="deleteEmployee(row.id)"
               >
                 删除
               </el-button>
@@ -157,7 +165,7 @@ export default {
     // cellValue 表示单元格的值
     formatEmployment(row, column, cellValue, index) {
       // console.log(cellValue); // 1
-      // find()方法返回数组中满足提供的测试函数的第一个元素的值。否则返回 undefined 
+      // find()方法返回数组中满足提供的测试函数的第一个元素的值。否则返回 undefined
       const obj = EmployeeEnum.hireType.find((item) => item.id === cellValue)
       return obj ? obj.value : '未知'
     },

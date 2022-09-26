@@ -46,3 +46,16 @@ export function addEmployee(data) {
     data
   })
 }
+
+/**
+ *
+ * @param {Object} data
+ * @description 导入员工的接口
+ */
+export function importEmployee(data) {
+  return request({
+    url: '/sys/user/batch',
+    method: 'post',
+    data
+  })
+}
