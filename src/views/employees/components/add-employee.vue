@@ -60,7 +60,7 @@
           v-if="showTree"
           v-loading="loading"
           :data="treeData"
-          default-expand-all=""
+          default-expand-all="true"
           :props="{ label: 'name' }"
           @node-click="selectNode"
         />
