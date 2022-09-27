@@ -50,7 +50,8 @@ export default {
     generateData({ header, results }) {
       this.excelData.header = header
       this.excelData.results = results
-      this.onSuccess && this.onSuccess(this.excelData)
+      // 调用父组件传递过来的 onSuccess,将表格传递给父组件
+      this.onSuccess && this.onSuccess(this.excelData) // onSuccess是props接收过来的函数
     },
     handleDrop(e) {
       e.stopPropagation()
@@ -78,9 +79,11 @@ export default {
       e.dataTransfer.dropEffect = 'copy'
     },
     handleUpload() {
+      // 点击上传按钮的时候获取input标签的DOM，调用了input的click事件
       this.$refs['excel-upload-input'].click()
     },
     handleClick(e) {
+      // 选择完文件之后，会触发change事件，在change事件的参数里面可以拿到导入文件的信息
       const files = e.target.files
       const rawFile = files[0] // only use files[0]
       if (!rawFile) return
@@ -100,14 +103,16 @@ export default {
     readerData(rawFile) {
       this.loading = true
       return new Promise((resolve, reject) => {
-        const reader = new FileReader()
+        const reader = new FileReader() // js读取文件的对象
         reader.onload = (e) => {
-          const data = e.target.result
+          const data = e.target.result // 文件里的文本
           const workbook = XLSX.read(data, { type: 'array' })
           const firstSheetName = workbook.SheetNames[0]
           const worksheet = workbook.Sheets[firstSheetName]
           const header = this.getHeaderRow(worksheet)
           const results = XLSX.utils.sheet_to_json(worksheet)
+          // 关键点：分别获取了excel中的标题和数据
+          // 把这个数据传递给父组件，让父组件使用
           this.generateData({ header, results })
           this.loading = false
           resolve()

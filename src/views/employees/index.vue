@@ -7,11 +7,13 @@
           <el-button
             size="small"
             type="warning"
-            @click="$router.push('/import')"
+            @click="$router.push('/import?type=user')"
           >
             导入
           </el-button>
-          <el-button size="small" type="danger">导出</el-button>
+          <el-button size="small" type="danger" @click="exportData">
+            导出
+          </el-button>
           <el-button size="small" type="primary" @click="showDialog = true">
             新增员工
           </el-button>
@@ -112,6 +114,8 @@ import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees'
 // 引入弹出层组件
 import AddEmployee from '@/views/employees/components/add-employee.vue'
+// 引入过滤器方法
+import { formatDate } from '@/filters'
 export default {
   components: {
     AddEmployee
@@ -182,6 +186,72 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    // excel导出员工
+    exportData() {
+      const headers = {
+        手机号: 'mobile',
+        姓名: 'username',
+        入职日期: 'timeOfEntry',
+        聘用形式: 'formOfEmployment',
+        转正日期: 'correctionTime',
+        工号: 'workNumber',
+        部门: 'departmentName'
+      }
+      // 懒加载处理
+      import('@/vendor/Export2Excel').then(async (excel) => {
+        // 此时需要data里的数据
+        const { rows } = await getEmployeeList({
+          page: 1,
+          size: this.page.total
+        })
+        const data = this.formatJson(headers, rows) // 返回的 data 就是导出的结构
+        const multiHeader = [['姓名', '主要信息', '', '', '', '', '部门']]
+        const merges = ['A1:A2', 'B1:F1', 'G1:G2']
+        // 导出
+        excel.export_json_to_excel({
+          header: Object.keys(headers), // 表头 必填
+          data, // 具体数据 必填
+          filename: '员工资料表', // 非必填
+          multiHeader, // 复杂表头
+          merges // 合并选项
+        })
+        // excel.export_json_to_excel({
+        //   header: ['姓名', '薪资'],
+        //   data: [['张三', 12000], ['李四', 5000]],
+        //   filename: '员工薪资表',
+        //   autoWidth: true,
+        //   bookType: 'csv'
+        // })
+        // 数据结构要和表头对应上
+      })
+    },
+    formatJson(headers, rows) {
+      // 首先遍历数组
+      // [{ username: '张三'},{},{}]  => [[’张三'],[],[]]
+      return rows.map((item) => {
+        // item是一个对象
+        // ['手机号','姓名','入职日期']
+        return Object.keys(headers).map((key) => {
+          if (
+            headers[key] === 'timeOfEntry' ||
+            headers[key] === 'correctionTime'
+          ) {
+            // 格式化日期
+            return formatDate(item[headers[key]]) // 返回格式化之前的时间
+          } else if (headers[key] === 'formOfEmployment') {
+            const obj = EmployeeEnum.hireType.find(
+              (obj) => obj.id === item[headers[key]]
+            )
+            return obj ? obj.value : '未知'
+          }
+          return item[headers[key]]
+        })
+      })
+      // return rows.map((item) =>
+      //   Object.keys(headers).map((key) => item[headers[key]])
+      // )
+      // 需要处理时间格式问题
     }
   }
 }
