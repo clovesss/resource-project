@@ -11,6 +11,9 @@
       </template>
       <el-button slot="after" type="warning">自定义按钮</el-button>
     </PageTools>
+
+    <!-- excel导入组件显示测试 -->
+    <UploadExcel />
   </div>
 </template>
 

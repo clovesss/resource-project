@@ -49,8 +49,8 @@ export function addEmployee(data) {
 
 /**
  *
- * @param {Object} data
- * @description 导入员工的接口
+ * @param {Array} data是数组类型
+ * @description excel导入员工数据的接口
  */
 export function importEmployee(data) {
   return request({

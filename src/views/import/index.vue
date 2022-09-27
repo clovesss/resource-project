@@ -1,58 +1,55 @@
 <template>
-  <!-- 公共导入我们的组件 -->
+  <!-- 公共导入组件 -->
   <upload-excel :on-success="success" />
 </template>
 
 <script>
-// 引入导入组件
-import uploadExcel from '@/components/UploadExcel'
-// 引入导入员工的接口
-import importEmployee from '@/api/employees.js'
+import { importEmployee } from '@/api/employees'
 export default {
-  name: 'ResourceProjectIndex',
-  components: {
-    uploadExcel
-  },
-  data() {
-    return {
-      type: this.$route.query.type
-    }
-  },
   methods: {
     async success({ header, results }) {
-      if (this.type === 'user') {
-        const userRelations = {
-          入职日期: 'timeOfEntry',
-          手机号: 'mobile',
-          姓名: 'username',
-          转正日期: 'correctionTime',
-          工号: 'workNumber'
-        }
-        const arr = []
-        // 遍历所有的数组
-        results.forEach((item) => {
-          // 需要将每一个条数据里面的中文都换成英文
-          const userInfo = {}
-          Object.keys(item).forEach((key) => {
-            // key是当前的中文名 找到对应的英文名
-            if (
-              userRelations[key] === 'timeOfEntry' ||
-              userRelations[key] === 'correctionTime'
-            ) {
-              userInfo[userRelations[key]] = new Date(
-                this.formatDate(item[key], '/')
-              ) // 只有这样, 才能入库
-              return
-            }
-            userInfo[userRelations[key]] = item[key]
-          })
-          // 最终userInfo变成了全是英文
-          arr.push(userInfo)
-        })
-        await importEmployee(arr)
-        this.$message.success('导入成功')
+      console.log(header, results)
+
+      const userRelations = {
+        入职日期: 'timeOfEntry',
+        手机号: 'mobile',
+        姓名: 'username',
+        转正日期: 'correctionTime',
+        工号: 'workNumber'
       }
-      this.$router.back() // 回到上一页
+      // const arr = []
+      // // 遍历所有的数组
+      // results.forEach((item) => {
+      //   // 需要将每一个条数据里面的中文都换成英文
+      //   const userInfo = {}
+      //   Object.keys(item).forEach((key) => {
+      //     // key是当前的中文名 找到对应的英文名
+      //     userInfo[userRelations[key]] = item[key] // 把中文对应的值赋值给原来英文对应的值
+      //   })
+      //   // 最终userInfo变成了全是英文
+      //   arr.push(userInfo)
+      // })
+      const newArr = results.map((item) => {
+        const userInfo = {}
+        Object.keys(item).forEach((key) => {
+          if (
+            userRelations[key] === 'timeOfEntry' ||
+            userRelations[key] === 'correctionTime'
+          ) {
+            userInfo[userRelations[key]] = new Date(
+              this.formatDate(item[key], '/')
+            ) // 只有这样, 才能入库
+            return
+          }
+          userInfo[userRelations[key]] = item[key]
+        })
+        return userInfo
+      })
+      // console.log(newArr)
+      await importEmployee(newArr)
+
+      this.$router.back() // 回到上一个页面
+      this.$message.success('导入excel成功')
     },
     formatDate(numb, format) {
       const time = new Date((numb - 1) * 24 * 3600000 + 1)

@@ -148,10 +148,11 @@ export default {
     }
   },
   methods: {
+    // 获取到部门数据，转化为树型结构显示
     async getDepartments() {
       this.showTree = true
       this.loading = true
-      const { depts } = await getDepartments() // 获取部门数据
+      const { depts } = await getDepartments() // 获取部门数据，depts 是一个数组，我们需要转化为树形结构
       this.treeData = tranListToTreeData(depts, '')
       this.loading = false
     },

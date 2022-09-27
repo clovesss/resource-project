@@ -7,7 +7,7 @@
           <el-button
             size="small"
             type="warning"
-            @click="$router.push('/import?type=user')"
+            @click="$router.push('/import')"
           >
             导入
           </el-button>
@@ -100,6 +100,7 @@
         </el-row>
       </el-card>
       <!-- 弹出层 -->
+      <!-- 添加.sync修饰符的目的是,在子组件中通过 this.$emit('update:showDialog',false)来更新 showDialog变量的值 -->
       <add-employee :show-dialog.sync="showDialog" />
     </div>
   </div>

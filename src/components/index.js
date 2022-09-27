@@ -1,7 +1,7 @@
 // 全局自定义组件的注册
 // 引入通用工具栏组件
 import PageTools from '@/components/PageTools'
-// 引入导入组件
+// 引入excel导入组件
 import UploadExcel from '@/components/UploadExcel'
 export default {
   install(Vue) {
