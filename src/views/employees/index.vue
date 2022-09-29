@@ -70,7 +70,13 @@
             <!-- 这里是作用域插槽的两种写法 -->
             <!-- <template slot-scope="{ row }"> -->
             <template v-slot="{ row }">
-              <el-button type="text" size="small">查看</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="$router.push(`/employees/detail/${row.id}`)"
+              >
+                查看
+              </el-button>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
