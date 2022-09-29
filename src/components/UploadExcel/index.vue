@@ -50,7 +50,7 @@ export default {
     generateData({ header, results }) {
       this.excelData.header = header
       this.excelData.results = results
-      // 调用父组件传递过来的 onSuccess,将表格传递给父组件
+      // 调用父组件传递过来的 onSuccess,将表格数据传递给父组件
       this.onSuccess && this.onSuccess(this.excelData) // onSuccess是props接收过来的函数
     },
     handleDrop(e) {
@@ -104,6 +104,7 @@ export default {
       this.loading = true
       return new Promise((resolve, reject) => {
         const reader = new FileReader() // js读取文件的对象
+        // 读取操作完成时触发该回调
         reader.onload = (e) => {
           const data = e.target.result // 文件里的文本
           const workbook = XLSX.read(data, { type: 'array' })
@@ -111,13 +112,13 @@ export default {
           const worksheet = workbook.Sheets[firstSheetName]
           const header = this.getHeaderRow(worksheet)
           const results = XLSX.utils.sheet_to_json(worksheet)
-          // 关键点：分别获取了excel中的标题和数据
+          // 关键点：分别获取了excel中的标题和数据。都是数组形式
           // 把这个数据传递给父组件，让父组件使用
           this.generateData({ header, results })
           this.loading = false
           resolve()
         }
-        reader.readAsArrayBuffer(rawFile)
+        reader.readAsArrayBuffer(rawFile) // 开始读取指定的 Blob 中的内容，一旦完成， result 属性中保存的将是被读取文件的 ArrayBuffer 数据对象
       })
     },
     getHeaderRow(sheet) {

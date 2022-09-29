@@ -187,11 +187,11 @@ export default {
         console.log(error)
       }
     },
-    // excel导出员工
+    // 员工的 excel导出
     exportData() {
       const headers = {
-        手机号: 'mobile',
         姓名: 'username',
+        手机号: 'mobile',
         入职日期: 'timeOfEntry',
         聘用形式: 'formOfEmployment',
         转正日期: 'correctionTime',
@@ -205,14 +205,15 @@ export default {
           page: 1,
           size: this.page.total
         })
-        const data = this.formatJson(headers, rows) // 返回的 data 就是导出的结构
-        const multiHeader = [['姓名', '主要信息', '', '', '', '', '部门']]
+        // console.log(rows) // rows 返回的是 数组对象的格式，我们需要转换为数组数组 格式
+        const data = this.formatJson(headers, rows) // 返回的 data 就是我们导出时需要的结构
+        const multiHeader = [['姓名', '主要信息', '', '', '', '', '部门']] // 里面的一个数组代表一行表头
         const merges = ['A1:A2', 'B1:F1', 'G1:G2']
         // 导出
         excel.export_json_to_excel({
-          header: Object.keys(headers), // 表头 必填
-          data, // 具体数据 必填
-          filename: '员工资料表', // 非必填
+          header: Object.keys(headers), // 导出数据的表头 必填
+          data, // 导出的具体数据 必填
+          filename: '员工资料表', // 设置导出的文件名，非必填
           multiHeader, // 复杂表头
           merges // 合并选项
         })
@@ -220,8 +221,8 @@ export default {
         //   header: ['姓名', '薪资'],
         //   data: [['张三', 12000], ['李四', 5000]],
         //   filename: '员工薪资表',
-        //   autoWidth: true,
-        //   bookType: 'csv'
+        //   autoWidth: true, // 单元格是否要自适应宽度,默认true
+        //   bookType: 'csv' // 导出文件类型,默认xlsx
         // })
         // 数据结构要和表头对应上
       })
@@ -230,28 +231,32 @@ export default {
       // 首先遍历数组
       // [{ username: '张三'},{},{}]  => [[’张三'],[],[]]
       return rows.map((item) => {
-        // item是一个对象
-        // ['手机号','姓名','入职日期']
+        // item 是一个员工的信息对象,{ mobile:'13678927867', username: '' }
+        // Object.keys(headers) 执行完拿到的是 ['手机号','姓名','入职日期', ...]
         return Object.keys(headers).map((key) => {
+          // map 里的 key 是 单个到的中文名，例如：手机号、姓名、...
           if (
             headers[key] === 'timeOfEntry' ||
             headers[key] === 'correctionTime'
           ) {
             // 格式化日期
-            return formatDate(item[headers[key]]) // 返回格式化之前的时间
+            return formatDate(item[headers[key]])
           } else if (headers[key] === 'formOfEmployment') {
+            // 对聘用形式的转换
             const obj = EmployeeEnum.hireType.find(
               (obj) => obj.id === item[headers[key]]
             )
             return obj ? obj.value : '未知'
           }
+          // headers[key] 就是英文名 例如: username、mobile、...
+          // item[headers[key]] 取出的是英文属性对应的值，例如: ['小舞', '13567899876',... ]
           return item[headers[key]]
         })
       })
       // return rows.map((item) =>
       //   Object.keys(headers).map((key) => item[headers[key]])
       // )
-      // 需要处理时间格式问题
+      // 需要处理时间格式问题,所以此处不用简写
     }
   }
 }

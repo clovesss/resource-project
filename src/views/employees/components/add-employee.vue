@@ -160,7 +160,7 @@ export default {
     },
     // 选择部门时的触发函数
     selectNode(node) {
-      // console.log(arguments)  共三个参数，依次为：传递给 data 属性的数组中该节点所对应的对象、节点对应的 Node、节点组件本身。
+      console.log(arguments) // 共三个参数，依次为：传递给 data 属性的数组中该节点所对应的对象、节点对应的 Node、节点组件本身。
       this.rulesForm.departmentName = node.name // 点击的节点name 赋值给部门名字
       this.showTree = false // 选择后关闭树形的选项
     },
