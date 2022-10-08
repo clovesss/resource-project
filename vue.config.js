@@ -40,7 +40,7 @@ module.exports = {
     // 代理跨域的配置
     proxy: {
       '/api': {
-        target: 'http://ihrm-java.itheima.net/', // 要访问的接口域名
+        target: 'http://ihrm.itheima.net/', // 要访问的接口域名  'http://ihrm-java.itheima.net/'
         changeOrigin: true // 是否跨域
         // 代理完毕后的真实地址是 http://ihrm-java.itheima.net/api,我们注释掉路径重写是因为我们的后台服务地址正好要求有这个api，所以不需要重写
         // pathRewrite: {

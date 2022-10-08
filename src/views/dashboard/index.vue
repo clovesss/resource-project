@@ -14,6 +14,7 @@
 
     <!-- excel导入组件显示测试 -->
     <UploadExcel />
+    <ImageUpload />
   </div>
 </template>
 

@@ -143,7 +143,7 @@ export default {
       list: [],
       page: {
         page: 1, // 当前页码
-        size: 5,
+        size: 10,
         total: 0 // 总数
       },
       showDialog: false // 控制弹出层的显示与隐藏
