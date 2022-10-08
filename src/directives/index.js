@@ -5,6 +5,7 @@ export const imageError = {
     // dom 表示当前指令作用的dom对象
     // dom认为此时就是图片
     // 当图片有地址 但是地址没有加载成功的时候 会报错 会触发图片的一个事件 => onerror
+    dom.src = dom.src || options.value // 初始化的时候，有值就赋值，没有就默认值
     dom.onerror = function () {
       // 当图片出现异常的时候 会将指令配置的默认图片设置为该图片的内容
       // dom可以注册error事件

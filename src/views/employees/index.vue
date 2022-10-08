@@ -29,6 +29,22 @@
             :index="indexF"
           />
           <el-table-column label="姓名" sortable="" prop="username" />
+          <el-table-column label="头像" align="center" width="120px">
+            <template slot-scope="{ row }">
+              <img
+                v-imageError="require('@/assets/common/head.jpg')"
+                :src="row.staffPhoto"
+                style="
+                  border-radius: 50%;
+                  width: 100px;
+                  height: 100px;
+                  padding: 10px;
+                "
+                alt=""
+                @click="showQrCode(row.staffPhoto)"
+              />
+            </template>
+          </el-table-column>
           <el-table-column label="工号" sortable="" prop="workNumber" />
           <!-- 方式1 使用局部过滤器实现 -->
           <!-- <el-table-column align="center" label="聘用形式" sortable="">
@@ -110,6 +126,16 @@
       <!-- 弹出层 -->
       <!-- 添加.sync修饰符的目的是,在子组件中通过 this.$emit('update:showDialog',false)来更新 showDialog变量的值 -->
       <add-employee :show-dialog.sync="showDialog" />
+      <el-dialog
+        title="二维码"
+        :visible.sync="showCodeDialog"
+        @opened="showQrCode"
+        @close="imgUrl = ''"
+      >
+        <el-row type="flex" justify="center">
+          <canvas ref="myCanvas"></canvas>
+        </el-row>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -122,6 +148,7 @@ import EmployeeEnum from '@/api/constant/employees'
 import AddEmployee from '@/views/employees/components/add-employee.vue'
 // 引入过滤器方法
 import { formatDate } from '@/filters'
+import QrCode from 'qrcode'
 export default {
   components: {
     AddEmployee
@@ -146,7 +173,8 @@ export default {
         size: 10,
         total: 0 // 总数
       },
-      showDialog: false // 控制弹出层的显示与隐藏
+      showDialog: false, // 控制弹出层的显示与隐藏
+      showCodeDialog: false // 显示二维码弹层
     }
   },
   created() {
@@ -263,6 +291,20 @@ export default {
       //   Object.keys(headers).map((key) => item[headers[key]])
       // )
       // 需要处理时间格式问题,所以此处不用简写
+    },
+    showQrCode(url) {
+      // url存在的情况下 才弹出层
+      if (url) {
+        this.showCodeDialog = true // 数据更新了 但是我的弹层会立刻出现吗 ？页面的渲染是异步的！！！！
+        // 有一个方法可以在上一次数据更新完毕，页面渲染完毕之后
+        this.$nextTick(() => {
+          // 此时可以确认已经有ref对象了
+          QrCode.toCanvas(this.$refs.myCanvas, url) // 将地址转化成二维码
+          // 如果转化的二维码后面信息 是一个地址的话 就会跳转到该地址 如果不是地址就会显示内容
+        })
+      } else {
+        this.$message.warning('该用户还未上传头像')
+      }
     }
   }
 }
