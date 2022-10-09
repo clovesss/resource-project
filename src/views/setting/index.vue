@@ -329,7 +329,7 @@ export default {
       // console.log(this.$refs.permTree.getCheckedKeys())
       // getCheckedKeys	若节点可被选择，则返回目前被选中的节点的 key 所组成的数组
       await assignPerm({
-        // 调用el-tree的方法
+        // 调用el-tree的 getCheckedKeys 方法
         permIds: this.$refs.permTree.getCheckedKeys(),
         id: this.roleId
       })

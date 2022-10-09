@@ -23,10 +23,18 @@ router.beforeEach(async (to, from, next) => {
       // 如果 vuex 中的 state 已经有用户资料了，我们就不用获取
       if (!store.getters.userId) {
         // 如果没有 ID 才表示当前用户资料没有获取过，我们需要获取
-        await store.dispatch('user/getUserInfo')
+        // 由于用户模块中 getUserInfo 方法里在接口调用完毕之后将返回的结果 return 了，所以这里可以拿到该数据
+        // async 函数所 return 的内容，用 await 就能接收到
+        const { roles } = await store.dispatch('user/getUserInfo')
         // 如果说以后我们要从用户资料拿到数据，此处必须改成同步(要当我们的用户资料获取完)
-      }
-      next() // 直接放行
+        // 筛选用户的可访问路由
+        // console.log(roles.menus, 0)
+        const routes = await store.dispatch('permission/filterRoutes', roles.menus) // routes 就是筛选得到的动态路由
+        // 把动态路由添加到路由表中
+        // console.log(routes, 2)
+        router.addRoutes(routes)
+        next(to.path) // 动态添加路由之后必须 next(to.path)
+      } else { next() } // 直接放行
     }
   } else {
     /* has no token*/

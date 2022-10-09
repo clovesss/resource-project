@@ -46,11 +46,11 @@ export const constantRoutes = [
     hidden: true
   },
 
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
+  // {
+  //   path: '/404',
+  //   component: () => import('@/views/404'),
+  //   hidden: true
+  // },
 
   {
     path: '/',
@@ -92,7 +92,8 @@ export const asyncRoutes = [
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }), // 管理滚动行为 如果出现滚动 切换就让 让页面回到顶部
-  routes: [...constantRoutes, ...asyncRoutes] // 临时合并静态路由和动态路由
+  // routes: [...constantRoutes, ...asyncRoutes] // 临时合并静态路由和动态路由
+  routes: [...constantRoutes]
 })
 
 const router = createRouter()

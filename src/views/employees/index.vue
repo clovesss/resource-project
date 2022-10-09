@@ -307,11 +307,10 @@ export default {
           // 此时可以确认已经有ref对象了
           QrCode.toCanvas(this.$refs.myCanvas, url) // 将地址转化成二维码
           // 如果转化的二维码后面信息 是一个地址的话 就会跳转到该地址 如果不是地址就会显示内容
-          console.log(1)
+          // console.log(1)
         })
       } else {
         this.$message.warning('该用户还未上传头像')
-        console.log(2)
       }
     },
     async editRole(id) {
