@@ -86,7 +86,7 @@ export function getPersonalDetail(id) {
  * **/
 export function updatePersonal(data) {
   return request({
-    url: `/employees/${data.id}/personalInfo`,
+    url: `/employees/${data.userId}/personalInfo`,
     method: 'put',
     data
   })

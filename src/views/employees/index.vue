@@ -128,12 +128,7 @@
       <!-- 弹出层 -->
       <!-- 添加.sync修饰符的目的是,在子组件中通过 this.$emit('update:showDialog',false)来更新 showDialog变量的值 -->
       <add-employee :show-dialog.sync="showDialog" />
-      <el-dialog
-        title="二维码"
-        :visible.sync="showCodeDialog"
-        @opened="showQrCode"
-        @close="imgUrl = ''"
-      >
+      <el-dialog title="二维码" :visible.sync="showCodeDialog">
         <el-row type="flex" justify="center">
           <canvas ref="myCanvas"></canvas>
         </el-row>
@@ -312,9 +307,11 @@ export default {
           // 此时可以确认已经有ref对象了
           QrCode.toCanvas(this.$refs.myCanvas, url) // 将地址转化成二维码
           // 如果转化的二维码后面信息 是一个地址的话 就会跳转到该地址 如果不是地址就会显示内容
+          console.log(1)
         })
       } else {
         this.$message.warning('该用户还未上传头像')
+        console.log(2)
       }
     },
     async editRole(id) {

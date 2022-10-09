@@ -4,7 +4,9 @@
       <!-- 靠右的按钮 -->
       <page-tools>
         <template v-slot:after>
-          <el-button type="primary" size="small">添加权限</el-button>
+          <el-button type="primary" size="small" @click="addPermission(0, 1)">
+            添加权限
+          </el-button>
         </template>
       </page-tools>
       <!-- 表格 -->
@@ -132,6 +134,7 @@ export default {
       this.$refs.perForm
         .validate()
         .then(() => {
+          // 通过对象中是否有id 区分此时点击的是编辑还是新增按钮
           if (this.formData.id) {
             return updatePermission(this.formData)
           }
@@ -139,7 +142,7 @@ export default {
         })
         .then(() => {
           //  提示消息
-          this.$message.success('新增成功')
+          this.$message.success(`${this.showText}成功`)
           this.getPermissionList()
           this.showDialog = false
         })
@@ -153,6 +156,7 @@ export default {
         pid: '', // 因为做的是树 需要知道添加到哪个节点下了
         enVisible: '0' // 开启
       }
+      // 移除校验
       this.$refs.perForm.resetFields()
       this.showDialog = false
     },
