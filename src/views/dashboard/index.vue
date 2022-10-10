@@ -5,11 +5,21 @@
       <div>
         <div class="fl headL">
           <div class="headImg">
-            <img src="@/assets/common/head.jpg" />
+            <!-- <img  :src="staffPhoto" /> -->
+            <!-- 当图片链接失效时，或者图片地址为空时，使用自定义指令默认了一张本地图片 -->
+            <img v-imageError="defaultImg" :src="userInfo.staffPhoto" alt="" />
           </div>
           <div class="headInfoTip">
-            <p class="firstChild">早安，管理员，祝你开心每一天！</p>
-            <p class="lastChild">早安，管理员，祝你开心每一天！</p>
+            <p class="firstChild">早安，{{ name }}，祝你开心每一天！</p>
+            <p class="lastChild">
+              <!-- 1. 传统方式获取vuex中的数据 -->
+              <!-- {{ name }} | {{ $store.state.user.userInfo.companyName }} -
+              {{ $store.state.user.userInfo.departmentName }} -->
+              <!-- 2. 引入辅助函数 -->
+              {{ userInfo.username }} : {{ userInfo.companyName }} -
+              {{ userInfo.departmentName }}
+              <!-- 3. 建立 userInfo 的快捷访问 -->
+            </p>
           </div>
         </div>
         <div class="fr"></div>
@@ -25,6 +35,9 @@
             <span>工作日历</span>
           </div>
           <!-- 放置日历组件 -->
+          <!-- <work-calendar /> -->
+          <!-- <WorkCalendar /> -->
+          <component :is="WorkCalendar" />
         </el-card>
         <!-- 公告 -->
         <el-card class="box-card">
@@ -128,12 +141,23 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
+import { mapGetters, createNamespacedHelpers } from 'vuex'
+const { mapState } = createNamespacedHelpers('user') // 利用这个方法给用户模块创建私有的mapState辅助函数
+import WorkCalendar from './components/work-calendar.vue'
 export default {
   name: 'Dashboard',
+  components: {
+    WorkCalendar
+  },
+  data() {
+    return {
+      WorkCalendar,
+      defaultImg: require('@/assets/common/head.jpg')
+    }
+  },
   computed: {
-    ...mapGetters(['name'])
+    ...mapGetters(['name', 'staffPhoto']),
+    ...mapState(['userInfo'])
   }
 }
 </script>

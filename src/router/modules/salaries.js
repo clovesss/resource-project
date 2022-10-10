@@ -1,17 +1,56 @@
+
 import Layout from '@/layout'
 
-export default {
-  path: '/salaries', // 路径
-  name: 'salarys', // 给路由规则加一个name
-  component: Layout, // 组件
-  // 配置二级路的路由表
-  children: [{
-    path: '', // 当二级路由的path什么都不写的时候 表示该路由为当前二级路由的默认路由
-    component: () => import('@/views/salaries'),
-    // 路由元信息  其实就是存储数据的对象 我们可以在这里放置一些信息
-    meta: {
-      icon: 'money',
-      title: '薪水' // meta属性的里面的属性 随意定义 但是这里为什么要用title呢， 因为左侧导航会读取我们的路由里的meta里面的title作为显示菜单名称
+const salaryRouter = {
+  path: '/salaries',
+  component: Layout,
+  name: 'salaries',
+  children: [
+    {
+      path: '',
+      component: () => import('@/views/salaries'),
+      name: 'salaries',
+      meta: {
+        title: '工资',
+        icon: 'money'
+      }
+    },
+    {
+      path: 'setting',
+      component: () => import('@/views/salaries/setting'),
+      name: 'salariesSetting',
+      hidden: true,
+      meta: {
+        title: '设置'
+      }
+    },
+    {
+      path: 'details/:yearMonth/:id',
+      component: () => import('@/views/salaries/detail'),
+      name: 'salariesDetails',
+      hidden: true,
+      meta: {
+        title: '详情'
+      }
+    },
+    {
+      path: 'historicalArchiving',
+      component: () => import('@/views/salaries/historical'),
+      name: 'salariesHistorical',
+      hidden: true,
+      meta: {
+        title: '历史归档'
+      }
+    },
+    {
+      path: 'monthStatement',
+      component: () => import('@/views/salaries/month'),
+      name: 'salariesMonthStatement',
+      hidden: true,
+      meta: {
+        title: '月报表'
+      }
     }
-  }]
+  ]
 }
+export default salaryRouter
