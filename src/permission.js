@@ -32,7 +32,7 @@ router.beforeEach(async (to, from, next) => {
         const routes = await store.dispatch('permission/filterRoutes', roles.menus) // routes 就是筛选得到的动态路由
         // 把动态路由添加到路由表中
         // console.log(routes, 2)
-        router.addRoutes(routes)
+        router.addRoutes([...routes, { path: '*', redirect: '/404', hidden: true }])
         next(to.path) // 动态添加路由之后必须 next(to.path)
       } else { next() } // 直接放行
     }

@@ -1,5 +1,6 @@
 import { getToken, setToken, removeToken, setTimeStamp } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailById } from '@/api/user.js'
+import { resetRouter } from '@/router'
 
 const state = {
   token: getToken(), // 初始化的时候从cookie中读取token
@@ -92,6 +93,14 @@ const actions = {
     context.commit('remove') // 移除token，移除vuex 中 state的 token
     // 删除用户信息
     context.commit('removeUserInfo')
+    // 重置路由
+    resetRouter()
+    // 设置权限模块下路由为初始状态
+    // vuex 子模块调用子模块的 action 方法
+    // 没有命名空间的所有的 mutations 和 action 都是挂在全局上的，我们可以直接调用
+    // 有命名空间的子模块如何调用另一个有命名空间的子模块的 mutations
+    // 有命名空间的 context 并不是全局的 context，我们可以 第三个参数给 {root: true}, 表示调用根级的mutations 或者 actions 。
+    context.commit('permission/setRoutes', [], { root: true })
   }
 
 }

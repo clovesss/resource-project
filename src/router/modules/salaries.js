@@ -2,7 +2,7 @@ import Layout from '@/layout'
 
 export default {
   path: '/salaries', // 路径
-  name: 'salaries', // 给路由规则加一个name
+  name: 'salarys', // 给路由规则加一个name
   component: Layout, // 组件
   // 配置二级路的路由表
   children: [{
