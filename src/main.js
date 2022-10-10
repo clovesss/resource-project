@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
-import ElementUI from 'element-ui'
+import ElementUI, { Checkbox } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
@@ -54,6 +54,10 @@ Object.keys(filters).forEach(key => {
   // 注册过滤器
   Vue.filter(key, filters[key]) // (过滤器名称,过滤器函数)
 })
+
+// 引入全局混入检查对象
+import checkPermission from '@/mixin/checkPermission.js'
+Vue.mixin(checkPermission)
 
 Vue.config.productionTip = false
 

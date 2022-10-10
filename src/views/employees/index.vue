@@ -14,7 +14,12 @@
           <el-button size="small" type="danger" @click="exportData">
             导出
           </el-button>
-          <el-button size="small" type="primary" @click="showDialog = true">
+          <el-button
+            size="small"
+            type="primary"
+            :disabled="!checkPermission('add-user')"
+            @click="showDialog = true"
+          >
             新增员工
           </el-button>
         </template>
