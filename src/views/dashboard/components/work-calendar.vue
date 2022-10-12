@@ -87,13 +87,16 @@ export default {
       Array(11),
       (val, index) => index + this.currentYear - 5
     )
+    this.dateChange()
   },
   methods: {
     // 转换日期的方法
     dateChange() {
       const year = this.currentYear
       const month = this.currentMonth
-      this.currentDate = new Date(`${year}-${month}-1`)
+      this.currentDate = new Date(
+        `${year}-${month}-${this.startDate.getDate()}`
+      )
     },
     // 判断当前日期是否时周末
     isWeekends(value) {
